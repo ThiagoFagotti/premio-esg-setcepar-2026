@@ -17,7 +17,6 @@ import os
 
 from dotenv import load_dotenv
 from google.cloud import bigquery
-from werkzeug.security import generate_password_hash
 
 load_dotenv()
 
@@ -50,7 +49,7 @@ def build_usuarios() -> list[dict]:
     return [
         {
             "username": username,
-            "senha_hash": generate_password_hash(senha),
+            "senha": senha,
             "nome_jurado": nome,
             "ativo": True,
         }

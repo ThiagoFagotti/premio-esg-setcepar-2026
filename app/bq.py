@@ -39,14 +39,14 @@ def _params(job_config_params: list) -> bigquery.QueryJobConfig:
 # --- Leitura --------------------------------------------------------------
 
 def carregar_usuarios() -> dict[str, dict]:
-    """Lê os usuários ativos. Retorna username -> {senha_hash, nome_jurado}."""
+    """Lê os usuários ativos. Retorna username -> {senha, nome_jurado}."""
     query = f"""
-        SELECT username, senha_hash, nome_jurado
+        SELECT username, senha, nome_jurado
         FROM `{config.table_ref(config.TABLE_USUARIOS)}`
         WHERE ativo = TRUE
     """
     usuarios = {
-        row.username: {"senha_hash": row.senha_hash, "nome_jurado": row.nome_jurado}
+        row.username: {"senha": row.senha, "nome_jurado": row.nome_jurado}
         for row in get_client().query(query).result()
     }
     logger.info("Carregados %d usuários ativos do BigQuery", len(usuarios))

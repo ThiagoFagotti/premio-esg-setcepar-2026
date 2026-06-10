@@ -13,14 +13,13 @@ Gravação é **append-only** (`INSERT`); uma avaliação salva **não pode ser 
 app/
   config.py     # configuração lida do .env (falha claro se faltar algo)
   bq.py         # acesso ao BigQuery (queries + INSERT append-only)
-  auth.py       # login via tabela usuarios (hash) + decorator login_required
+  auth.py       # login via tabela usuarios + decorator login_required
   main.py       # app Flask + rotas
   templates/    # base.html, login.html, avaliacao.html
   static/css/   # style.css (CSS compartilhado, antes inline/duplicado)
 scripts/
   ddl.sql        # cria dataset + 3 tabelas
   seed.py        # popula usuarios (placeholder) + projetos (fictícios)
-  gen_hash.py    # gera hash de senha para colar em usuarios
   infra_setup.sh # cria a conta de serviço com privilégio mínimo
 ```
 

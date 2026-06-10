@@ -32,7 +32,8 @@ dados novo. **Nós criamos todos os dados do zero** — não há base legada a p
    `UPDATE`** e o campo `situacao`. "Já avaliado" passa a ser computado por `LEFT JOIN`.
 3. **Separar dados em 3 tabelas**: `usuarios`, `projetos`, `avaliacoes` (esquemas na §3).
 4. **Todos os jurados avaliam todos os projetos.** Não há tabela de atribuição.
-5. **Usuários/senhas no BigQuery**, senha **com hash** (nunca texto puro). A lista é
+5. **Usuários/senhas no BigQuery**, senha **em texto puro** (decisão institucional revista —
+   app interno pequeno; o hash foi removido). A lista é
    **lida uma vez no startup** do app (login validado em memória).
 6. **Remover o conceito de "admin".** Logins de teste se comportam como jurados normais.
    A parte administrativa (apuração, ranking) é feita **direto no BigQuery**, fora do app.
@@ -72,7 +73,7 @@ Dataset: `premio_esg_setcepar_2026` (dataset único, novo; o antigo
 | coluna       | tipo   | observações                                  |
 |--------------|--------|----------------------------------------------|
 | `username`   | STRING | identificador de login (único)               |
-| `senha_hash` | STRING | hash gerado por `werkzeug.security` (PBKDF2) |
+| `senha`      | STRING | senha em texto puro (app interno; sem hash)   |
 | `nome_jurado`| STRING | nome exibido / usado como `avaliador`         |
 | `ativo`      | BOOL   | permite desativar sem apagar                 |
 
@@ -152,7 +153,7 @@ afete nada e o rollback seja trivial:
 - [x] **Dataset** `premio_esg_setcepar_2026` + as 3 tabelas (§3), criados pelo Console.
       **Location `southamerica-east1`** (mesma do dataset legado).  ✅
 - [x] **`usuarios`** populada com 5 jurados placeholder `jurado_1`..`jurado_5` (senhas provisórias,
-      hash `werkzeug`; trocáveis depois sem mexer no código via `scripts/gen_hash.py`).  ✅
+      senha em texto puro; trocáveis depois via `UPDATE` na tabela `usuarios`).  ✅
 - [x] **`projetos`** semeada com **18 projetos fictícios** (3 categorias × 2 portes × 3) para
       desenvolver/testar. Os dados reais (~35) **virão do SETCEPAR** (ver §5).  ✅
 
@@ -176,8 +177,8 @@ afete nada e o rollback seja trivial:
 
 ### Fase 2 — Autenticação via BigQuery  ✅ CONCLUÍDA (`app/auth.py`; CSRF via Flask-WTF em `main.py`)
 - [x] Carregar `usuarios` da tabela **no startup** para memória (estrutura: username →
-      {senha_hash, nome_jurado}). Considerar só usuários `ativo = TRUE`.
-- [x] Validar login com `check_password_hash`. **Remover o dict hardcoded** (`main.py:35-42`).
+      {senha, nome_jurado}). Considerar só usuários `ativo = TRUE`.
+- [x] Validar login por **comparação direta da senha**. **Remover o dict hardcoded** (`main.py:35-42`).
 - [x] **Remover o conceito de admin**: apagar o ramo "admin" morto em `carregar_*`
       (`main.py:64,103`) e tratar todos os logins igualmente.
 - [x] Criar decorator `@login_required` e aplicá-lo (elimina os `if 'username' not in

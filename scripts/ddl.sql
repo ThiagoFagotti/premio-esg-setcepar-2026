@@ -17,7 +17,7 @@ OPTIONS (location = 'southamerica-east1');
 -- Usuários (somente leitura pelo app; lida no startup) ------------------
 CREATE TABLE IF NOT EXISTS `iptc-banco-de-dados.premio_esg_setcepar_2026.usuarios` (
   username    STRING NOT NULL,   -- identificador de login (único)
-  senha_hash  STRING NOT NULL,   -- hash werkzeug.security (PBKDF2) — nunca texto puro
+  senha       STRING NOT NULL,   -- senha em texto puro (app interno; sem hash)
   nome_jurado STRING NOT NULL,   -- nome exibido / usado como `avaliador`
   ativo       BOOL   NOT NULL    -- permite desativar sem apagar
 );

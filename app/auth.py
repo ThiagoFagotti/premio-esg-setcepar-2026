@@ -1,14 +1,13 @@
 """Autenticação dos jurados a partir da tabela `usuarios` do BigQuery.
 
-- A lista de usuários é lida uma vez (cache em memória) e a senha é validada
-  com `check_password_hash` — sem dict hardcoded, sem senha em texto puro.
+- A lista de usuários é lida uma vez (cache em memória) e a senha é comparada
+  diretamente (texto puro — decisão institucional p/ app interno pequeno).
 - Não existe mais o conceito de "admin": todo login é tratado como jurado.
 """
 import logging
 from functools import wraps
 
 from flask import redirect, session, url_for
-from werkzeug.security import check_password_hash
 
 from . import bq
 
@@ -28,7 +27,7 @@ def get_usuarios() -> dict[str, dict]:
 def autenticar(username: str, password: str) -> dict | None:
     """Retorna o registro do usuário se as credenciais forem válidas, senão None."""
     usuario = get_usuarios().get(username)
-    if usuario and check_password_hash(usuario["senha_hash"], password):
+    if usuario and usuario["senha"] == password:
         return usuario
     return None
 

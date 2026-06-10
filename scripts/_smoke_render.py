@@ -24,7 +24,7 @@ bq.obter_projeto = lambda i: PROJETO if i == "proj-001" else None
 bq.ja_avaliado = lambda i, j: False
 inseridas = []
 bq.inserir_avaliacao = lambda i, j, notas, c: inseridas.append((i, j, notas, c))
-auth._usuarios = {"jurado_1": {"senha_hash": "x", "nome_jurado": "Jurado Um"}}
+auth._usuarios = {"jurado_1": {"senha": "x", "nome_jurado": "Jurado Um"}}
 
 app = main.app
 app.config["WTF_CSRF_ENABLED"] = False  # facilita o POST no teste
