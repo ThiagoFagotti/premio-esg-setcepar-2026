@@ -1,0 +1,343 @@
+/* Estilos compartilhados — Prêmio ESG SETCEPAR.
+   Antes o CSS era inline e duplicado em cada template; agora fica aqui. */
+
+/* ----- Base ----- */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Calibri', sans-serif;
+    background-color: #F2F2F2;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    color: #034059;
+}
+
+/* ----- Rodapé (comum a todas as telas) ----- */
+.footer {
+    background-color: #F2F2F2;
+    padding: 10px 0;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.footer-logo { height: 35px; margin-right: 15px; }
+
+.footer-text {
+    color: #034059;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.registered-symbol {
+    font-size: 14px;
+    vertical-align: super;
+    margin-left: 2px;
+}
+
+/* ----- Mensagens flash ----- */
+.flash {
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+}
+
+.flash-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+/* ===================== LOGIN ===================== */
+.main-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
+}
+
+.login-box {
+    background-color: #437655;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    width: 300px;
+}
+
+.login-box h2 { color: #FFFFFF; font-size: 24px; margin-bottom: 20px; }
+
+.textbox { margin-bottom: 20px; color: #FFFFFF; }
+
+.textbox input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #061c19;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.textbox input:focus { border-color: #061c19; outline: none; }
+
+.login-box button {
+    background-color: #061c19;
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.login-box button:hover { background-color: #0b372b; }
+
+/* ===================== AVALIAÇÃO ===================== */
+.page-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
+    margin-bottom: 50px;
+}
+
+.container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 75%;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+}
+
+.container .top-section {
+    background-color: #437655;
+    width: 100%;
+    padding: 1px 0;
+    position: relative;
+}
+
+.container .bottom-section {
+    background-color: white;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 28px;
+    text-align: center;
+    color: #F2F2F2;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+/* Header com usuário/logout */
+.user-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f2f2f2;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.user-info { color: #034059; }
+
+.logout-button {
+    background-color: #034059;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.logout-button:hover { background-color: #022e41; }
+
+/* Barra de progresso (X de Y avaliados) */
+.progresso {
+    margin-bottom: 20px;
+}
+
+.progresso-label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.progresso-barra {
+    background-color: #e9ecef;
+    border-radius: 6px;
+    overflow: hidden;
+    height: 18px;
+}
+
+.progresso-preenchido {
+    background-color: #437655;
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+/* Etapas de seleção */
+.section-margin { margin-top: 5px; margin-bottom: 5px; }
+
+.breadcrumb {
+    background-color: #f2f2f2;
+    padding: 8px 12px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+select {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #061c19;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+select:focus { border-color: #061c19; }
+select:disabled { background-color: #e9ecef; cursor: not-allowed; }
+
+/* Tabela de avaliação */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #034059;
+}
+
+th {
+    background-color: #061c19;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #034059;
+}
+
+td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #034059;
+    width: 200px;
+}
+
+td:first-child, th:first-child { text-align: left; width: 1200px; height: 35px; }
+
+input[type="radio"] { margin: 10px; transform: scale(1.5); cursor: pointer; }
+
+.total { font-weight: bold; background-color: #F2F2F2; }
+
+/* Ícone de info + tooltip */
+.info-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #061c19;
+    color: white;
+    text-align: center;
+    line-height: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 10px;
+    position: relative;
+    float: right;
+}
+
+.info-icon::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    background-color: #333;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 5px;
+    font-size: 13px;
+    white-space: normal;
+    width: 320px;
+    top: 30px;
+    right: 0;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+    line-height: 1.4;
+}
+
+.info-icon:hover::after { opacity: 1; }
+
+/* Comentário */
+textarea {
+    width: 98%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #061c19;
+    margin: 10px 0 20px 0;
+    resize: vertical;
+    min-height: 50px;
+    font-family: 'Calibri';
+    font-size: 14px;
+}
+
+/* Botões */
+button {
+    background-color: #061c19;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+button:hover { background-color: #437655; }
+
+button.secundario { background-color: #6c757d; margin-top: 10px; }
+button.secundario:hover { background-color: #5a6268; }
+
+/* Aviso quando não há projetos */
+.no-companies {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+    text-align: center;
+}

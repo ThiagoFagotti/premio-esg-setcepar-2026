@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Login - 1º Prêmio ESG SETCEPAR{% endblock %}
+
+{% block body %}
+<div class="main-container">
+    <div class="login-container">
+        <div class="login-box">
+            <img src="{{ url_for('static', filename='Logo_premioESG_site.jpg') }}" alt="Logo"
+                 style="width: 200px; height: auto;">
+            <h2>Login</h2>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="flash-message">{{ messages[0] }}</div>
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="textbox">
+                    <label for="username">Usuário:</label>
+                    <input type="text" name="username" id="username" required><br><br>
+                </div>
+                <div class="textbox">
+                    <label for="password">Senha:</label>
+                    <input type="password" name="password" id="password" required><br><br>
+                </div>
+                <button type="submit">Entrar</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

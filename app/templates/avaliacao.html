@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+{% block title %}Avaliação - 1º Prêmio ESG SETCEPAR{% endblock %}
+
+{% block body %}
+<div class="page-container">
+    <div class="container">
+        <div class="top-section">
+            <img src="{{ url_for('static', filename='Logo_premioESG_site.jpg') }}" alt="Logo"
+                 style="position: absolute; top: 20px; right: 20px; width: 160px; height: auto; z-index: 10;">
+            <h1 style="width: 70%; margin-left: auto; margin-right: auto;">Avaliação - 1º Prêmio ESG SETCEPAR</h1>
+        </div>
+
+        <div class="bottom-section">
+            <div class="user-header">
+                <div class="user-info">Jurado Responsável: {{ jurado }}</div>
+                <a href="{{ url_for('logout') }}" class="logout-button">Sair</a>
+            </div>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="flash">{{ messages[0] }}</div>
+                {% endif %}
+            {% endwith %}
+
+            {# ===================== TELA 1 — SELEÇÃO (home) ===================== #}
+            {% if not projeto_atual %}
+                <!-- Progresso total geral do jurado (apenas nesta tela) -->
+                <div class="progresso">
+                    <div class="progresso-label">
+                        Progresso: {{ avaliados }} de {{ total_projetos }} avaliados
+                    </div>
+                    <div class="progresso-barra">
+                        <div class="progresso-preenchido"
+                             style="width: {{ (100 * avaliados / total_projetos) if total_projetos else 0 }}%;"></div>
+                    </div>
+                </div>
+
+                {% if projetos_pendentes %}
+                    <form method="POST" class="section-margin" id="form-selecao">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="acao" value="selecionar_projeto">
+
+                        <label for="sel-categoria"><strong>Selecione a Categoria:</strong></label>
+                        <select id="sel-categoria" required>
+                            <option value="" disabled selected>Escolha uma categoria</option>
+                        </select>
+
+                        <label for="sel-porte"><strong>Selecione o Porte:</strong></label>
+                        <select id="sel-porte" required disabled>
+                            <option value="" disabled selected>Escolha um porte</option>
+                        </select>
+
+                        <label for="sel-empresa"><strong>Selecione a Empresa:</strong></label>
+                        <select id="sel-empresa" name="id_projeto" required disabled>
+                            <option value="" disabled selected>Escolha uma empresa</option>
+                        </select>
+
+                        <button type="submit" id="btn-avaliar" disabled>Avaliar</button>
+                    </form>
+                {% else %}
+                    <div class="no-companies">
+                        Você já avaliou todos os projetos disponíveis. Obrigado!
+                    </div>
+                {% endif %}
+
+            {# ===================== TELA 2 — AVALIAÇÃO ===================== #}
+            {% else %}
+                <div class="breadcrumb">
+                    <strong>Categoria:</strong> {{ projeto_atual.categoria }}
+                    &nbsp;|&nbsp; <strong>Porte:</strong> {{ projeto_atual.porte }}
+                    &nbsp;|&nbsp; <strong>Empresa:</strong> {{ projeto_atual.empresa }}
+                </div>
+                <div class="section-margin">
+                    <h3><strong>Projeto:</strong> {{ projeto_atual.projeto }}</h3>
+                </div>
+                <form method="POST" id="form-avaliacao"
+                      onsubmit="return confirm('Confirma o envio desta avaliação? Após salvar, ela NÃO poderá ser editada.');">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="acao" value="salvar_avaliacao">
+                    <table>
+                        <tr>
+                            <th>Critérios de Avaliação</th>
+                            <th>Inexistente</th>
+                            <th>Deixa à Desejar</th>
+                            <th>Bom</th>
+                            <th>Muito Bom</th>
+                            <th>Excelente</th>
+                            <th>Nota</th>
+                        </tr>
+                        <tr>
+                            <td>1. Planejamento e gestão
+                                <span class="info-icon" data-tooltip="Ter um planejamento estruturado, com etapas, recursos definidos, mecanismos de gestão e acompanhamento do projeto.">i</span>
+                            </td>
+                            {% for v in range(1, 6) %}
+                                <td><input type="radio" name="planejamento_e_gestao" value="{{ v }}" {% if v == 1 %}required{% endif %}></td>
+                            {% endfor %}
+                            <td><span id="nota_planejamento_e_gestao">0</span></td>
+                        </tr>
+                        <tr>
+                            <td>2. Criatividade e inovação
+                                <span class="info-icon" data-tooltip="Soluções não habituais, aspectos que diferenciam o projeto dos demais, originalidade.">i</span>
+                            </td>
+                            {% for v in range(1, 6) %}
+                                <td><input type="radio" name="criatividade_inovacao" value="{{ v }}" {% if v == 1 %}required{% endif %}></td>
+                            {% endfor %}
+                            <td><span id="nota_criatividade_inovacao">0</span></td>
+                        </tr>
+                        <tr>
+                            <td>3. Melhoria contínua
+                                <span class="info-icon" data-tooltip="Processo de evolução e adaptação do projeto, próximos passos.">i</span>
+                            </td>
+                            {% for v in range(1, 6) %}
+                                <td><input type="radio" name="melhoria_continua" value="{{ v }}" {% if v == 1 %}required{% endif %}></td>
+                            {% endfor %}
+                            <td><span id="nota_melhoria_continua">0</span></td>
+                        </tr>
+                        <tr>
+                            <td>4. Resultados do projeto
+                                <span class="info-icon" data-tooltip="Necessidades que o projeto atendeu, impacto real gerado.">i</span>
+                            </td>
+                            {% for v in range(1, 6) %}
+                                <td><input type="radio" name="resultados_do_projeto" value="{{ v }}" {% if v == 1 %}required{% endif %}></td>
+                            {% endfor %}
+                            <td><span id="nota_resultados_do_projeto">0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="total">Total da Nota</td>
+                            <td colspan="5"></td>
+                            <td class="total"><span id="total">0.00</span></td>
+                        </tr>
+                    </table>
+
+                    <div class="section-margin">
+                        <h3><strong>Comentário da Avaliação</strong></h3>
+                        <label for="comentario">Deixe seu comentário sobre o projeto (obrigatório):</label>
+                        <textarea name="comentario" id="comentario"
+                                  placeholder="Digite aqui suas observações, sugestões ou críticas sobre o projeto..." required></textarea>
+                    </div>
+
+                    <button type="submit">Salvar Avaliação</button>
+                </form>
+                <form method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="acao" value="voltar">
+                    <button type="submit" class="secundario" formnovalidate>Voltar</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if not projeto_atual %}
+{# ----- TELA 1: cascata Categoria -> Porte -> Empresa (client-side) ----- #}
+<script>
+    const PENDENTES = {{ projetos_pendentes | tojson }};
+    const CATEGORIAS = {{ categorias | tojson }};
+    const PORTES = {{ portes | tojson }};
+    const SALVO = {{ salvo | tojson if salvo else 'null' }};
+
+    // Limpa o cache (localStorage) do projeto recém-salvo (veio via ?salvo=<id>).
+    if (SALVO) localStorage.removeItem('aval_' + SALVO);
+
+    const selCat = document.getElementById('sel-categoria');
+    const selPorte = document.getElementById('sel-porte');
+    const selEmp = document.getElementById('sel-empresa');
+    const btn = document.getElementById('btn-avaliar');
+
+    function novaOpcao(value, text) {
+        const o = document.createElement('option');
+        o.value = value;
+        o.textContent = text;
+        return o;
+    }
+
+    function resetar(sel, placeholder) {
+        sel.innerHTML = '';
+        const ph = novaOpcao('', placeholder);
+        ph.disabled = true;
+        ph.selected = true;
+        sel.appendChild(ph);
+        sel.disabled = true;
+    }
+
+    if (selCat) {
+        // Popular categorias (na ordem canônica) que ainda têm projeto pendente.
+        CATEGORIAS.filter(c => PENDENTES.some(p => p.categoria === c))
+                  .forEach(c => selCat.appendChild(novaOpcao(c, c)));
+
+        selCat.addEventListener('change', function () {
+            resetar(selPorte, 'Escolha um porte');
+            resetar(selEmp, 'Escolha uma empresa');
+            btn.disabled = true;
+            const cat = selCat.value;
+            PORTES.filter(pt => PENDENTES.some(p => p.categoria === cat && p.porte === pt))
+                  .forEach(pt => selPorte.appendChild(novaOpcao(pt, pt)));
+            selPorte.disabled = false;
+        });
+
+        selPorte.addEventListener('change', function () {
+            resetar(selEmp, 'Escolha uma empresa');
+            btn.disabled = true;
+            const cat = selCat.value, pt = selPorte.value;
+            PENDENTES.filter(p => p.categoria === cat && p.porte === pt)
+                     .forEach(p => selEmp.appendChild(novaOpcao(p.id_projeto, p.empresa + ' — ' + p.projeto)));
+            selEmp.disabled = false;
+        });
+
+        selEmp.addEventListener('change', function () {
+            btn.disabled = !selEmp.value;
+        });
+    }
+</script>
+{% else %}
+{# ----- TELA 2: total dinâmico + cache do preenchimento (localStorage) ----- #}
+<script>
+    const CAMPOS = ['planejamento_e_gestao', 'criatividade_inovacao', 'melhoria_continua', 'resultados_do_projeto'];
+
+    function valorCampo(nome) {
+        const sel = document.querySelector('input[name="' + nome + '"]:checked');
+        return sel ? parseFloat(sel.value) : 0;
+    }
+
+    function atualizarTotal() {
+        let total = 0;
+        CAMPOS.forEach(function (nome) {
+            const v = valorCampo(nome);
+            const span = document.getElementById('nota_' + nome);
+            if (span) span.textContent = v;
+            total += v;
+        });
+        const spanTotal = document.getElementById('total');
+        if (spanTotal) spanTotal.textContent = total.toFixed(2);
+    }
+
+    const ID_PROJETO = {{ projeto_atual.id_projeto | tojson }};
+    const chave = 'aval_' + ID_PROJETO;
+
+    function salvarCache() {
+        const dados = { comentario: (document.getElementById('comentario') || {}).value || '' };
+        CAMPOS.forEach(function (nome) {
+            const sel = document.querySelector('input[name="' + nome + '"]:checked');
+            if (sel) dados[nome] = sel.value;
+        });
+        localStorage.setItem(chave, JSON.stringify(dados));
+    }
+
+    function restaurarCache() {
+        const bruto = localStorage.getItem(chave);
+        if (!bruto) return;
+        try {
+            const dados = JSON.parse(bruto);
+            CAMPOS.forEach(function (nome) {
+                if (dados[nome]) {
+                    const r = document.querySelector('input[name="' + nome + '"][value="' + dados[nome] + '"]');
+                    if (r) r.checked = true;
+                }
+            });
+            const c = document.getElementById('comentario');
+            if (c && dados.comentario) c.value = dados.comentario;
+        } catch (e) { /* cache corrompido: ignora */ }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('input[type="radio"], #comentario').forEach(function (el) {
+            el.addEventListener('change', function () { atualizarTotal(); salvarCache(); });
+            el.addEventListener('input', salvarCache);
+        });
+        restaurarCache();
+        atualizarTotal();
+        // O cache só é limpo após salvar com sucesso (a Tela 1 recebe ?salvo=<id>),
+        // preservando o preenchimento em reloads acidentais ou se o confirm for cancelado.
+    });
+</script>
+{% endif %}
+{% endblock %}

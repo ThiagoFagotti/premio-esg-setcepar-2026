@@ -1,0 +1,24 @@
+# Segredos — NUNCA dentro da imagem (em produção a credencial vem da SA anexada)
+.env
+.env.*
+*.json
+*-key.json
+
+# Ambiente virtual e controle de versão
+.venv/
+venv/
+env/
+.git/
+.gitignore
+
+# Cache do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE / sistema operacional
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
